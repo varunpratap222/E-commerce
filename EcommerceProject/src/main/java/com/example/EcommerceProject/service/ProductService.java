@@ -1,10 +1,12 @@
 package com.example.EcommerceProject.service;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import com.example.EcommerceProject.entity.Product;
 import com.example.EcommerceProject.repository.ProductRepository;
 
+@Setter
 @Service
 public class ProductService {
 
@@ -18,4 +20,5 @@ public class ProductService {
     public List<Product> getAllProducts() {
         return repo.findAll();
     }
+
 }
