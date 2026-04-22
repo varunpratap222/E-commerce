@@ -2,8 +2,10 @@ package com.example.EcommerceProject.controller;
 
 import com.example.EcommerceProject.entity.User;
 import com.example.EcommerceProject.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,13 +19,26 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        return userService.register(user);
+    public ResponseEntity<?> register(@RequestBody User user) {
+
+        String message = userService.register(user);
+
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "message", message
+        ));
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        return userService.login(user);
-    }
-}
+    public ResponseEntity<?> login(@RequestBody User user) {
 
+        String token = userService.login(user);
+
+        return ResponseEntity.ok(Map.of(
+                "success", true,
+                "token", token
+        ));
+    }
+
+
+}
