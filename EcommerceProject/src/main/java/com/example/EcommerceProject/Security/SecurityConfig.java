@@ -1,5 +1,5 @@
 package com.example.EcommerceProject.Security;
-
+import com.example.EcommerceProject.config.CorsConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,10 +14,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final CorsConfig corsConfig;
 
     // 👇 Inject JWT filter
-    public SecurityConfig(JwtFilter jwtFilter) {
+    public SecurityConfig(JwtFilter jwtFilter, CorsConfig corsConfig) {
         this.jwtFilter = jwtFilter;
+        this.corsConfig = corsConfig;
     }
 
     @Bean

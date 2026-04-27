@@ -1,5 +1,4 @@
 package com.example.EcommerceProject.entity;
-
 import jakarta.persistence.*;
 
 @Entity

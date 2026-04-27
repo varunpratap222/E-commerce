@@ -1,12 +1,8 @@
 package com.example.EcommerceProject.service;
-
-
-
 import com.example.EcommerceProject.entity.User;
 import com.example.EcommerceProject.repository.UserRepository;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 
 @Service

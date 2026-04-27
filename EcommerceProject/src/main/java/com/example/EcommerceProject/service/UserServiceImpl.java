@@ -1,5 +1,4 @@
 package com.example.EcommerceProject.service;
-
 import com.example.EcommerceProject.entity.User;
 import com.example.EcommerceProject.repository.UserRepository;
 import com.example.EcommerceProject.Security.JwtUtil;
@@ -38,14 +37,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String login(User user) {
+        System.out.println("➡️ LOGIN SERVICE HIT: email=" + user.getEmail());
 
         User existingUser = userRepository.findByEmail(user.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> {
+                    System.out.println("❌ User not found");
+                    return new RuntimeException("User not found");
+                });
 
-        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+        boolean matches = passwordEncoder.matches(user.getPassword(), existingUser.getPassword());
+        System.out.println("➡️ Password matches? " + matches);
+
+        if (!matches) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(existingUser.getEmail());
+        String token = jwtUtil.generateToken(existingUser.getEmail());
+        System.out.println("✅ Generated token: " + token);
+        return token;
     }
 }
