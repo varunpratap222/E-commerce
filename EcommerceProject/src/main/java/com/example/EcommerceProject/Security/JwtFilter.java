@@ -29,8 +29,9 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        System.out.println("➡️ REQUEST HIT: " + request.getRequestURI());
+
         String path = request.getServletPath();
+
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
@@ -45,13 +46,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
         String authHeader = request.getHeader("Authorization");
-
+        System.out.println("AUTH HEADER: " + authHeader);
         String token = null;
         String email = null;
 
         // 1. Extract token
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
+
+            System.out.println("TOKEN: " + token);
 
             try {
                 email = jwtUtil.extractEmail(token);

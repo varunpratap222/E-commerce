@@ -1,12 +1,17 @@
 package com.example.EcommerceProject.entity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.*;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 @Entity
+@Table(name = "products")
 public class Product {
 
     // Getters & Setters
@@ -14,16 +19,16 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
-    private double price;
 
-    public Product() {
+    @Column(length = 500)
+    private String description;
 
-    }
+    @Column(nullable = false)
+    private Double price;
 
-    public Product(String name, double price) {
-        this.name = name;
-        this.price = price;
-    }
+    private String imageUrl;
+
 
 }

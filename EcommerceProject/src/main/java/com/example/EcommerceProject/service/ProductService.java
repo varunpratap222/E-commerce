@@ -1,24 +1,17 @@
 package com.example.EcommerceProject.service;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import com.example.EcommerceProject.dto.ProductRequestDTO;
+import com.example.EcommerceProject.dto.ProductResponseDTO;
+
 import java.util.List;
-import com.example.EcommerceProject.entity.Product;
-import com.example.EcommerceProject.repository.ProductRepository;
 
-@Setter
-@Service
-public class ProductService {
+public interface ProductService {
 
-    @Autowired
-    private ProductRepository repo;
+    ProductResponseDTO addProduct(ProductRequestDTO dto);
 
-    public Product saveProduct(Product product) {
-        return repo.save(product);
-    }
+    List<ProductResponseDTO> getAllProducts();
 
-    public List<Product> getAllProducts() {
-        return repo.findAll();
-    }
+    ProductResponseDTO getProductById(Long id);
 
+    List<ProductResponseDTO> searchProducts(String keyword);
 }
