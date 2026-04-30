@@ -2,6 +2,9 @@ package com.example.EcommerceProject.Security;
 import com.example.EcommerceProject.config.CorsConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,7 +38,15 @@ public class SecurityConfig {
                 .cors(cors -> {})
 
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+
+                        // 👇 Anyone authenticated (USER or ADMIN) can VIEW products
+                        .requestMatchers(HttpMethod.GET, "/api/users/products/**").hasAnyRole("USER", "ADMIN")
+                        // 👇 Only ADMIN can modify products
+                        .requestMatchers(HttpMethod.POST, "/api/users/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/products/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
@@ -49,4 +60,11 @@ public class SecurityConfig {
 
         return http.build();
     }
+    // ✅ Needed for login
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
 }

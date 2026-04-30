@@ -26,26 +26,30 @@ public class JwtUtil {
                 .compact();
     }
 
-    // ✅ Extract email (THIS FIXES YOUR ERROR)
-    public String extractEmail(String token) {
+    // ✅ Extract email
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    // ✅ Validate token with username
+    public boolean validateToken(String token, String username) {
+        final String extractedUsername = extractUsername(token);
+        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    }
+
+    // ✅ Check expiry
+    private boolean isTokenExpired(String token) {
+        return extractAllClaims(token)
+                .getExpiration()
+                .before(new Date());
+    }
+
+    // ✅ Common claims method
+    private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-    }
-
-    // ✅ Validate token (THIS FIXES YOUR ERROR)
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+                .getBody();
     }
 }

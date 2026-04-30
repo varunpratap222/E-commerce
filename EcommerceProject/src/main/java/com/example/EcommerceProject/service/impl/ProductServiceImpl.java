@@ -64,4 +64,34 @@ public class ProductServiceImpl implements ProductService {
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ProductResponseDTO updateProduct(Long id, ProductRequestDTO dto) {
+
+        Product existing = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        existing.setName(dto.getName());
+        existing.setDescription(dto.getDescription());
+        existing.setPrice(dto.getPrice());
+        existing.setImageUrl(dto.getImageUrl());
+
+        Product updated = repo.save(existing);
+
+        return mapToDTO(updated);
+    }
+
+    @Override
+    public String deleteProduct(Long id) {
+
+        Product existing = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        repo.delete(existing);
+
+        return "Product deleted successfully";
+    }
+
+
+
 }

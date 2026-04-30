@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
             System.out.println("TOKEN: " + token);
 
             try {
-                email = jwtUtil.extractEmail(token);
+                email = jwtUtil.extractUsername(token);
             } catch (Exception e) {
                 // invalid token → ignore
                 email = null;
@@ -70,14 +71,21 @@ public class JwtFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-            UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
+            if (jwtUtil.validateToken(token, userDetails.getUsername())) {
 
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+
+                );
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
 
         // 3. Continue filter chain

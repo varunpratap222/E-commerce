@@ -6,5 +6,7 @@ public class ProductRequestDTO {
     private String description;
     private Double price;
     private String imageUrl;
+    private Integer stock;
+    private String category;
 
 }
