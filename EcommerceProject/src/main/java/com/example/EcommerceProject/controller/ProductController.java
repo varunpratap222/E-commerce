@@ -9,7 +9,7 @@ import java.util.List;
 import com.example.EcommerceProject.entity.Product;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/users/products")
 @CrossOrigin(origins = "http://localhost:5173")
 public class ProductController {
 
@@ -23,7 +23,6 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ProductResponseDTO addProduct(@RequestBody ProductRequestDTO dto) {
-        System.out.println("🔥 POST METHOD HIT");
         return service.addProduct(dto);
     }
 
