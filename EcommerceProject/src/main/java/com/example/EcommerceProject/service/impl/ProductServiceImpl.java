@@ -1,4 +1,5 @@
 package com.example.EcommerceProject.service.impl;
+
 import com.example.EcommerceProject.dto.ProductRequestDTO;
 import com.example.EcommerceProject.dto.ProductResponseDTO;
 import com.example.EcommerceProject.entity.Product;
@@ -18,7 +19,6 @@ public class ProductServiceImpl implements ProductService {
         this.repo = repo;
     }
 
-    // convert Entity → DTO
     private ProductResponseDTO mapToDTO(Product p) {
         ProductResponseDTO dto = new ProductResponseDTO();
         dto.setId(p.getId());
@@ -26,6 +26,8 @@ public class ProductServiceImpl implements ProductService {
         dto.setDescription(p.getDescription());
         dto.setPrice(p.getPrice());
         dto.setImageUrl(p.getImageUrl());
+        dto.setStock(p.getStock());
+        dto.setCategory(p.getCategory());
         return dto;
     }
 
@@ -36,6 +38,8 @@ public class ProductServiceImpl implements ProductService {
         p.setDescription(dto.getDescription());
         p.setPrice(dto.getPrice());
         p.setImageUrl(dto.getImageUrl());
+        p.setStock(dto.getStock());
+        p.setCategory(dto.getCategory());
 
         Product saved = repo.save(p);
         return mapToDTO(saved);
@@ -75,6 +79,8 @@ public class ProductServiceImpl implements ProductService {
         existing.setDescription(dto.getDescription());
         existing.setPrice(dto.getPrice());
         existing.setImageUrl(dto.getImageUrl());
+        existing.setStock(dto.getStock());
+        existing.setCategory(dto.getCategory());
 
         Product updated = repo.save(existing);
 
@@ -91,7 +97,4 @@ public class ProductServiceImpl implements ProductService {
 
         return "Product deleted successfully";
     }
-
-
-
 }

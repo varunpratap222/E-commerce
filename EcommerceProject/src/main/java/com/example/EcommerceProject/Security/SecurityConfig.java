@@ -11,9 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -41,12 +43,17 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
 
+                        // current user profile
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("USER", "ADMIN")
+
                         // 👇 Anyone authenticated (USER or ADMIN) can VIEW products
                         .requestMatchers(HttpMethod.GET, "/api/users/products/**").hasAnyRole("USER", "ADMIN")
+
                         // 👇 Only ADMIN can modify products
                         .requestMatchers(HttpMethod.POST, "/api/users/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/users/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/products/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/cart/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
 

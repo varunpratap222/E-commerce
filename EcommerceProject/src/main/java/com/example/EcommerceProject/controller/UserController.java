@@ -1,8 +1,12 @@
 package com.example.EcommerceProject.controller;
+
 import com.example.EcommerceProject.entity.User;
+import com.example.EcommerceProject.repository.UserRepository;
 import com.example.EcommerceProject.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Map;
 
 @RestController
@@ -11,9 +15,11 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
@@ -48,10 +54,23 @@ public class UserController {
             return ResponseEntity.status(401).body(Map.of(
                     "success", false,
                     "message", e.getMessage()
-
             ));
         }
-
     }
 
+    // NEW API -> CURRENT LOGGED USER
+    @GetMapping("/me")
+    public ResponseEntity<?> currentUser(Authentication authentication) {
+
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(Map.of(
+                "email", user.getEmail(),
+                "name", user.getName(),
+                "role", user.getRole()
+        ));
+    }
 }
