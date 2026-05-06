@@ -11,4 +11,8 @@ public interface CartService {
     List<CartResponseDTO> getUserCart(String userEmail);
 
     String removeFromCart(Long cartId);
+
+    String increaseQuantity(Long cartId);
+
+    String decreaseQuantity(Long cartId);
 }

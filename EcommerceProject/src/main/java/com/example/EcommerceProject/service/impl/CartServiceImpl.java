@@ -37,6 +37,14 @@ public class CartServiceImpl implements CartService {
         Product product = productRepo.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
+        Cart existingCart = cartRepo.findByUserAndProduct(user, product).orElse(null);
+
+        if (existingCart != null) {
+            existingCart.setQuantity(existingCart.getQuantity() + 1);
+            cartRepo.save(existingCart);
+            return "Quantity increased";
+        }
+
         Cart cart = new Cart();
         cart.setUser(user);
         cart.setProduct(product);
@@ -46,6 +54,8 @@ public class CartServiceImpl implements CartService {
 
         return "Product added to cart successfully";
     }
+
+
 
     @Override
     public List<CartResponseDTO> getUserCart(String userEmail) {
@@ -78,5 +88,30 @@ public class CartServiceImpl implements CartService {
         cartRepo.delete(cart);
 
         return "Item removed from cart";
+    }
+
+    @Override
+    public String increaseQuantity(Long cartId) {
+        Cart cart = cartRepo.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+        cart.setQuantity(cart.getQuantity() +1);
+        cartRepo.save(cart);
+
+        return "Quantity increased";
+    }
+
+    @Override
+    public String decreaseQuantity(Long cartId){
+        Cart cart = cartRepo.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        if(cart.getQuantity() > 1) {
+            cart.setQuantity(cart.getQuantity() - 1);
+            cartRepo.save(cart);
+        }
+        else {
+            cartRepo.delete(cart);
+        }
+        return "Quantity decreased";
     }
 }

@@ -43,4 +43,14 @@ public class CartController {
     public String removeCart(@PathVariable Long cartId) {
         return cartService.removeFromCart(cartId);
     }
+
+    @PutMapping("/increase/{cartId}")
+    public String increaseQty(@PathVariable Long cartId) {
+        return cartService.increaseQuantity(cartId);
+    }
+
+    @PutMapping("/decrease/{cartId}")
+    public String decreaseQty(@PathVariable Long cartId) {
+        return cartService.decreaseQuantity(cartId);
+    }
 }
