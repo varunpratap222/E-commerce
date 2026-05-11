@@ -1,4 +1,5 @@
 package com.example.EcommerceProject.Security;
+
 import com.example.EcommerceProject.config.CorsConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/products/**").hasRole("ADMIN")
                         .requestMatchers("/api/users/cart/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/orders/**").authenticated()
                         .anyRequest().authenticated()
                 )
 
