@@ -4,6 +4,7 @@ import com.example.EcommerceProject.entity.*;
 import com.example.EcommerceProject.repository.*;
 import com.example.EcommerceProject.service.OrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public String placeOrder(String email) {
 
         User user = userRepo.findByEmail(email)
@@ -48,6 +50,20 @@ public class OrderServiceImpl implements OrderService {
         double totalAmount = 0;
 
         for (Cart cart : cartItems) {
+
+            Product product = cart.getProduct();
+
+            // STOCK VALIDATION
+            if (product.getStock() < cart.getQuantity()) {
+                throw new RuntimeException(
+                        product.getName() + " is out of stock"
+                );
+            }
+
+            // REDUCE STOCK
+            product.setStock(
+                    product.getStock() - cart.getQuantity()
+            );
 
             OrderItem item = new OrderItem();
 
