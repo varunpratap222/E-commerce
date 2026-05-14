@@ -1,9 +1,13 @@
 package com.example.EcommerceProject.controller;
 
 import com.example.EcommerceProject.Security.JwtUtil;
+import com.example.EcommerceProject.dto.CheckoutRequestDTO;
 import com.example.EcommerceProject.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -31,10 +35,28 @@ public class OrderController {
     }
 
     @PostMapping("/checkout")
-    public String checkout(HttpServletRequest request) {
+    public ResponseEntity<?> checkout(
+            @RequestBody CheckoutRequestDTO dto,
+            HttpServletRequest request
+    ) {
 
-        String email = extractEmail(request);
+        try {
 
-        return orderService.placeOrder(email);
+            String email = extractEmail(request);
+
+            String message = orderService.placeOrder(email, dto);
+
+            return ResponseEntity.ok(Map.of(
+                    "success", true,
+                    "message", message
+            ));
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", e.getMessage()
+            ));
+        }
     }
 }

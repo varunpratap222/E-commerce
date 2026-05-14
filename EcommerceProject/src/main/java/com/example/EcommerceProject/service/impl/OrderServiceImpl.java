@@ -1,6 +1,8 @@
 package com.example.EcommerceProject.service.impl;
 
+import com.example.EcommerceProject.dto.CheckoutRequestDTO;
 import com.example.EcommerceProject.entity.*;
+import com.example.EcommerceProject.enums.OrderStatus;
 import com.example.EcommerceProject.repository.*;
 import com.example.EcommerceProject.service.OrderService;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,37 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public String placeOrder(String email) {
+    public String placeOrder(String email, CheckoutRequestDTO dto) {
+
+        // validations
+
+        if(dto.getFullName() == null || dto.getFullName().isBlank()) {
+            throw new RuntimeException("Full name is required");
+        }
+
+        if(dto.getPhone() == null || dto.getPhone().length() != 10) {
+            throw new RuntimeException("Invalid phone number");
+        }
+
+        if(dto.getAddress() == null || dto.getAddress().isBlank()) {
+            throw new RuntimeException("Address is required");
+        }
+
+        if(dto.getCity() == null || dto.getCity().isBlank()) {
+            throw new RuntimeException("City is required");
+        }
+
+        if(dto.getState() == null || dto.getState().isBlank()) {
+            throw new RuntimeException("State is required");
+        }
+
+        if(dto.getPincode() == null || dto.getPincode().length() != 6) {
+            throw new RuntimeException("Invalid pincode");
+        }
+
+        if(dto.getPaymentMethod() == null || dto.getPaymentMethod().isBlank()) {
+            throw new RuntimeException("Payment method required");
+        }
 
         User user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -43,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
 
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
-        order.setStatus("CONFIRMED");
+        order.setStatus(OrderStatus.valueOf("CONFIRMED"));
 
         List<OrderItem> orderItems = new ArrayList<>();
 

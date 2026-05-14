@@ -1,4 +1,5 @@
 package com.example.EcommerceProject.entity;
+import com.example.EcommerceProject.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,9 +19,15 @@ public class Order {
 
     private Double totalAmount;
 
-    private String status;
+
+
+    private String paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
 
     private LocalDateTime orderDate;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
