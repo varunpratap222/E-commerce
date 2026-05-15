@@ -7,6 +7,8 @@ import com.example.EcommerceProject.repository.*;
 import com.example.EcommerceProject.service.OrderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.example.EcommerceProject.dto.OrderResponseDTO;
+import com.example.EcommerceProject.dto.OrderItemResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -124,4 +126,36 @@ public class OrderServiceImpl implements OrderService {
 
         return "Order placed successfully ✅";
     }
+    @Override
+    public List<OrderResponseDTO> getUserOrders(String email) {
+
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Order> orders = orderRepo.findByUser(user);
+
+        return orders.stream().map(order -> {
+
+            List<OrderItemResponseDTO> itemDTOs =
+                    order.getOrderItems()
+                            .stream()
+                            .map(item -> new OrderItemResponseDTO(
+                                    item.getProduct().getName(),
+                                    item.getProduct().getImageUrl(),
+                                    item.getQuantity(),
+                                    item.getPrice()
+                            ))
+                            .toList();
+
+            return new OrderResponseDTO(
+                    order.getId(),
+                    order.getStatus().name(),
+                    order.getTotalAmount(),
+                    order.getOrderDate(),
+                    itemDTOs
+            );
+
+        }).toList();
+    }
+
 }

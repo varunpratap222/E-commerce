@@ -2,11 +2,13 @@ package com.example.EcommerceProject.controller;
 
 import com.example.EcommerceProject.Security.JwtUtil;
 import com.example.EcommerceProject.dto.CheckoutRequestDTO;
+import com.example.EcommerceProject.dto.OrderResponseDTO;
 import com.example.EcommerceProject.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -57,6 +59,30 @@ public class OrderController {
                     "success", false,
                     "message", e.getMessage()
             ));
+        }
+    }
+    @GetMapping("/my-orders")
+    public ResponseEntity<?> getMyOrders(
+            HttpServletRequest request
+    ) {
+
+        try {
+
+            String email = extractEmail(request);
+
+            List<OrderResponseDTO> orders =
+                    orderService.getUserOrders(email);
+
+            return ResponseEntity.ok(orders);
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "success", false,
+                            "message", e.getMessage()
+                    )
+            );
         }
     }
 }
