@@ -126,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
 
         return "Order placed successfully ✅";
     }
+    @Transactional
     @Override
     public List<OrderResponseDTO> getUserOrders(String email) {
 

@@ -46,6 +46,9 @@ public class SecurityConfig {
 
                         // current user profile
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/users/profile").authenticated()
+                        .requestMatchers("/api/orders/**").authenticated()
+
 
                         // 👇 Anyone authenticated (USER or ADMIN) can VIEW products
                         .requestMatchers(HttpMethod.GET, "/api/users/products/**").hasAnyRole("USER", "ADMIN")
@@ -55,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/products/**").hasRole("ADMIN")
                         .requestMatchers("/api/users/cart/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/api/orders/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
 
@@ -75,5 +78,7 @@ public class SecurityConfig {
             AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+
 
 }

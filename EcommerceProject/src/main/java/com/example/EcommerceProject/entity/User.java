@@ -16,6 +16,10 @@ public class User {
 
     private String password;
 
+    private String phone;
+
+    private String address;
+
     @Column(nullable = false)
     private String role;
 
@@ -48,6 +52,14 @@ public class User {
         return role;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -69,4 +81,11 @@ public class User {
     }
 
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

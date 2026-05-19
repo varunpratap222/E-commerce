@@ -6,6 +6,7 @@ import com.example.EcommerceProject.dto.OrderResponseDTO;
 import com.example.EcommerceProject.service.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,31 @@ public class OrderController {
         return jwtUtil.extractUsername(token);
     }
 
+    @GetMapping("/my-orders")
+    public ResponseEntity<?> getMyOrders(
+            HttpServletRequest request
+    ) {
+
+        try {
+
+            String email = extractEmail(request);
+
+            List<OrderResponseDTO> orders =
+                    orderService.getUserOrders(email);
+
+            return ResponseEntity.ok(orders);
+
+        } catch (Exception e) {
+
+            return ResponseEntity.badRequest().body(
+                    Map.of(
+                            "success", false,
+                            "message", e.getMessage()
+                    )
+            );
+        }
+    }
+
     @PostMapping("/checkout")
     public ResponseEntity<?> checkout(
             @RequestBody CheckoutRequestDTO dto,
@@ -61,28 +87,5 @@ public class OrderController {
             ));
         }
     }
-    @GetMapping("/my-orders")
-    public ResponseEntity<?> getMyOrders(
-            HttpServletRequest request
-    ) {
 
-        try {
-
-            String email = extractEmail(request);
-
-            List<OrderResponseDTO> orders =
-                    orderService.getUserOrders(email);
-
-            return ResponseEntity.ok(orders);
-
-        } catch (Exception e) {
-
-            return ResponseEntity.badRequest().body(
-                    Map.of(
-                            "success", false,
-                            "message", e.getMessage()
-                    )
-            );
-        }
-    }
 }
