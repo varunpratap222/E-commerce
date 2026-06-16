@@ -21,6 +21,9 @@ public class LoginPage {
     private By loginBtn =
             By.tagName("button");
 
+    private By errorMessage =
+            By.xpath("//p[text()='Invalid credentials']");
+
     public void enterEmail(String value) {
 
         driver.findElement(email)
@@ -49,5 +52,13 @@ public class LoginPage {
         enterPassword(password);
 
         clickLogin();
+    }
+
+    public String getErrorDisplayed() {
+        return driver.findElement(errorMessage).getText();
+    }
+
+    public String getErrorMessage() {
+        return driver.findElement(errorMessage).getText();
     }
 }
