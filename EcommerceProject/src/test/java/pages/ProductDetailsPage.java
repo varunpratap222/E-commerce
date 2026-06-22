@@ -19,7 +19,7 @@ public class ProductDetailsPage {
     }
 
     private By productName =
-            By.tagName("h1");
+            By.xpath("//h3");
 
     private By productPrice =
             By.xpath("//p[contains(text(),'₹')]");
@@ -32,21 +32,6 @@ public class ProductDetailsPage {
             By.xpath(
                     "//button[contains(text(),'Add To Cart')]"
             );
-    private By cartButton =
-
-            By.xpath("//a[contains(text(),'Cart')]");
-
-    private By plusButton =
-
-            By.xpath("//button[text()='+']");
-
-    private By minusButton =
-
-            By.xpath("//button[text()='-']");
-
-    private By quantity =
-
-            By.xpath("//span[@style='font-size: 20px; font-weight: bold;']");
 
     public void clickAddToCart() {
         driver.findElement(addToCartBtn).click();
@@ -117,37 +102,6 @@ public class ProductDetailsPage {
 
                 ConfigReader.getProperty("baseUrl")
                         + "/cart"
-
-        );
-    }
-
-
-    public void increaseQuantity(){
-
-        driver.findElement(
-
-                plusButton
-
-        ).click();
-    }
-
-    public void decreaseQuantity(){
-
-        driver.findElement(
-
-                minusButton
-
-        ).click();
-    }
-    public int getQuantity(){
-
-        return Integer.parseInt(
-
-                driver.findElement(
-
-                        quantity
-
-                ).getText()
 
         );
     }

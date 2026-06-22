@@ -161,29 +161,27 @@ public class CartPage {
 
             By.xpath("//h3");
 
-    public boolean isProductPresent(
 
-            String productName
 
-    ){
+    public void proceedToCheckout(){
 
-        List<WebElement> products =
+        driver.findElement(
+                checkoutButton
+        ).click();
+    }
 
-                driver.findElements(
+    public boolean isProductPresent(String productName){
 
-                        productNames
+        List<WebElement> products = driver.findElements(productNames);
 
-                );
+        System.out.println("Searching for: [" + productName + "]");
 
         for(WebElement product : products){
 
-            if(product.getText()
+            System.out.println("Found: [" + product.getText() + "]");
 
-                    .equalsIgnoreCase(
-
-                            productName
-
-                    )){
+            if(product.getText().trim()
+                    .equalsIgnoreCase(productName.trim())){
 
                 return true;
             }
@@ -256,23 +254,48 @@ public class CartPage {
 
         return Integer.parseInt(subtotal);
     }
-    public void removeProduct(
-
-            String productName
-
-    ){
+    public void removeProduct(String productName){
 
         String xpath =
-
-                "//h3[text()='"+productName+"']" +
-
+                "//h3[text()='" + productName + "']" +
                         "/following::button[text()='Remove'][1]";
 
-        driver.findElement(
+        driver.findElement(By.xpath(xpath)).click();
 
-                By.xpath(xpath)
+        WebDriverWait wait =
+                new WebDriverWait(driver, Duration.ofSeconds(15));
 
-        ).click();
+        wait.until(
+                ExpectedConditions.visibilityOfElementLocated(
+                        emptyCartMessage
+                )
+        );
+    }
+
+    private By emptyCartMessage =
+            By.xpath("//h2[contains(text(),'Your Cart is Empty')]");
+
+    public boolean isCartEmpty() {
+
+        return driver.findElements(emptyCartMessage)
+                .size() > 0;
+    }
+    public void removeAllProducts() {
+
+        WebDriverWait wait =
+                new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        By removeBtn = By.xpath("//button[text()='Remove']");
+
+        while (driver.findElements(removeBtn).size() > 0) {
+
+            WebElement button =
+                    wait.until(ExpectedConditions.elementToBeClickable(removeBtn));
+
+            button.click();
+
+            wait.until(ExpectedConditions.stalenessOf(button));
+        }
     }
 
 }
