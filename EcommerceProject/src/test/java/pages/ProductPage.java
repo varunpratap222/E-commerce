@@ -33,32 +33,38 @@ public class ProductPage {
 
     private By searchBox =
 
-            By.xpath("//input");
+            By.cssSelector(
+                    "input[placeholder='Search by name or category...']"
+            );
 
-    private By mobileFilter =
+    private By firstProduct =
 
-            By.xpath("//button[text()='Mobile']");
+            By.tagName("h3");
 
-    public void selectMobileFilter() {
 
-        driver.findElement(
-
-                mobileFilter
-
-        ).click();
-    }
-
-    public void searchProduct(String product) {
+    public void searchProduct(
+            String product
+    ){
 
         WebElement search =
 
-                driver.findElement(searchBox);
+                driver.findElement(
+                        searchBox
+                );
 
         search.clear();
 
         search.sendKeys(product);
     }
 
+    public boolean isProductDisplayed(
+            String productName
+    ) {
+
+        return driver.getPageSource()
+
+                .contains(productName);
+    }
 
 
     public int getProductCount(){
@@ -83,12 +89,30 @@ public class ProductPage {
 
         return driver.findElements(productImages);
     }
+    public boolean isProductVisible(
+            String productName
+    ){
 
+        return driver
 
-    public void clickFirstProduct(){
+                .getPageSource()
 
-        driver.findElements(products)
-                .get(0)
-                .click();
+                .contains(productName);
+    }
+
+    public void openFirstProduct(String s) {
+
+        driver.findElements(
+
+                firstProduct
+
+        ).get(0).click();
+    }
+
+    public void openProduct(String productName){
+
+        driver.findElement(
+                By.xpath("//h3[text()='" + productName + "']/ancestor::div[1]")
+        ).click();
     }
 }

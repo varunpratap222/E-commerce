@@ -1,31 +1,44 @@
 package tests;
 
 import base.BaseTest;
+
 import org.testng.Assert;
+
 import org.testng.annotations.Test;
+
 import pages.ProductPage;
 
-import static sun.security.jgss.GSSUtil.login;
+public class SearchProductTest
 
-public class SearchProductTest extends BaseTest{
+        extends BaseTest {
+
     @Test
 
-    public void searchProductTest() {
+    public void searchProductTest()
+
+            throws InterruptedException {
 
         login();
+
+        Thread.sleep(10000);
 
         ProductPage page =
 
                 new ProductPage(driver);
 
-        page.searchProduct("Samsung");
+        page.searchProduct(
+                "Samsung"
+        );
+        Thread.sleep(3000);
+
 
         Assert.assertTrue(
 
-                driver.getPageSource()
+                page.isProductVisible(
+                        "Samsung S24"
+                ),
 
-                        .contains("Samsung")
-
+                "Search failed"
         );
     }
 }
