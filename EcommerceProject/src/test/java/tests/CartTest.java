@@ -34,7 +34,7 @@ public class CartTest extends BaseTest {
         Thread.sleep(2000);
         details.clickAddToCart();
         Thread.sleep(2000);
-        details.acceptAlert();
+            details.acceptAlert();
         Thread.sleep(2000);
         CartPage cart =
 
