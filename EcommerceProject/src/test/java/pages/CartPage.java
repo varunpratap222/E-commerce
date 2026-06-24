@@ -38,6 +38,15 @@ public class CartPage {
 
             By.xpath("//button[contains(text(),'Proceed to Checkout')]");
 
+    public void clickCheckout(){
+
+        driver.findElement(
+
+                checkoutButton
+
+        ).click();
+    }
+
     private By increaseButton =
 
             By.xpath("(//button[text()='+'])[1]");
