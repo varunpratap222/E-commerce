@@ -167,4 +167,4 @@ MySQL Database
 
 **Varun Pratap**  
 B.E. Computer Science Engineering  
-Java Full Stack Developer
+Java Developer
